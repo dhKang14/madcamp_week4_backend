@@ -24,7 +24,7 @@ class AuthController {
   static async signup(req: Request, res: Response) {
     try {
       const { password, name, email, carrots } = req.body; // 요청 본문에서 회원 가입 정보를 가져옵니다.
-      const newUser = await AuthService.signup(password, name, email, carrots); // AuthService의 signup 메서드를 호출하여 회원 가입을 시도합니다.
+      const newUser = await AuthService.signup(password, name, email); // AuthService의 signup 메서드를 호출하여 회원 가입을 시도합니다.
       res.json(newUser); // 회원 가입 성공 시 사용자 정보를 반환합니다.
     } catch (error) {
       res.status(500).json({ error: "회원 가입 중에 오류가 발생했습니다." });

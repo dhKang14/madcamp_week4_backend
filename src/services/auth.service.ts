@@ -23,12 +23,7 @@ class AuthService {
     // 로그아웃 로직을 구현하세요.
   }
 
-  static async signup(
-    password: string,
-    name: string,
-    email: string,
-    carrots: number
-  ) {
+  static async signup(password: string, name: string, email: string) {
     // 회원 가입 로직을 구현하세요.
     try {
       // 사용자 생성
@@ -36,7 +31,6 @@ class AuthService {
         password: password,
         name: name,
         email: email,
-        carrots: carrots,
       });
       await UserRepository.save(newuser);
       // 사용자 프로필 정보 반환
