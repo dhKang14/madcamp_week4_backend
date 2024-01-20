@@ -1,7 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  JoinColumn,
+} from "typeorm";
+import { TodoList } from "./todoList.entity";
 
 @Entity("user_profile")
-class UserProfile {
+export class UserProfile {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -17,14 +24,9 @@ class UserProfile {
   @Column()
   carrots: number;
 
-  constructor() {
-    // 생성자에서 클래스 속성 초기화
-    this.id = 0;
-    this.password = "";
-    this.name = "";
-    this.email = "";
-    this.carrots = 0;
-  }
+  @OneToMany(() => TodoList, (todolist) => todolist.user, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn({ name: "todolist" })
+  todolists: TodoList[];
 }
-
-module.exports = UserProfile;
