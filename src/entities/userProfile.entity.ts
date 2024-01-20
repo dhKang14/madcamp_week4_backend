@@ -21,7 +21,7 @@ export class UserProfile {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ default: 0 })
   carrots: number;
 
   @OneToMany(() => TodoList, (todolist) => todolist.user, {

@@ -15,4 +15,4 @@ router.patch("/todos/:id", ToDoController.updateToDo);
 // To-Do 목록을 삭제하는 API 엔드포인트
 router.delete("/todos/:id", ToDoController.deleteToDo);
 
-export default router;
+module.exports = router;

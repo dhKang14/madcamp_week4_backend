@@ -15,4 +15,4 @@ router.post("/signup", AuthController.signup);
 // 비밀번호 변경
 router.post("/change-password", AuthController.changePassword);
 
-export default router;
+module.exports = router;
