@@ -3,6 +3,13 @@ import { myDataSource } from "../datasource";
 import { UserProfile } from "../entities/userProfile.entity";
 import { TodoRepository, UserRepository } from "../repositories";
 
+import * as jwt from "jsonwebtoken";
+import * as fs from "fs";
+import * as path from "path";
+
+const privateKeyPath: string = path.join(__dirname, "../certs/private.key");
+const privateKey = fs.readFileSync(privateKeyPath);
+
 async function login(email: string, password: string) {
   // 로그인 로직을 구현하세요.
   // 이메일과 비밀번호를 사용하여 사용자를 찾습니다.
@@ -14,11 +21,11 @@ async function login(email: string, password: string) {
     throw new Error("no user");
   }
 
-  const user = await UserRepository.findOne({
+  const user: UserProfile | null = await UserRepository.findOne({
     where: { email: email, password: password },
   });
 
-  if (!user) {
+  if (user === null) {
     // 사용자를 찾을 수 없으면 로그인 실패로 처리합니다.
     throw new Error("로그인 실패: 이메일 또는 비밀번호가 일치하지 않습니다.");
   }
@@ -83,3 +90,15 @@ const AuthService = {
 };
 
 export default AuthService;
+
+export const createJWT = (user: UserProfile) => {
+  const token = jwt.sign(
+    { id: user.id, email: user.email, iat: Math.floor(Date.now() / 1000) },
+    privateKey,
+    {
+      algorithm: "RS256",
+      expiresIn: "3d",
+    }
+  );
+  return token;
+};

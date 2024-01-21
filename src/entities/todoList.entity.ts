@@ -16,7 +16,7 @@ export class TodoList {
   task: string;
 
   @Column()
-  date: string;
+  date: Date;
 
   @Column()
   place: string;

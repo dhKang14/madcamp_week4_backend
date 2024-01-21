@@ -9,18 +9,21 @@ var logger = require("morgan");
 
 var usersRouter = require("./routes/users.route");
 var authRouter = require("./routes/auth.route");
+var todoRouter = require("./routes/todo.route");
 
 var app = express();
 var cors = require("cors");
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3001");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3001");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+//   res.header("Access-Control-Allow-Headers", "Content-Type");
+//   next();
+// });
 
-app.use(cors());
+// app.use(cors());
+
+app.use(cors({ origin: "http://localhost:3001", credentials: true }));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -35,6 +38,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //현아!!!!
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
+app.use("/todos", todoRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {

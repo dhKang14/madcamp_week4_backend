@@ -25,7 +25,7 @@ class ToDoService {
 
   static async createToDo(
     userId: any,
-    date: any,
+    date: Date,
     task: any,
     place: any,
     animation: any,
@@ -55,49 +55,23 @@ class ToDoService {
     }
   }
 
-  static async updateToDo(
-    id: any,
-    task: any,
-    place: any,
-    animation: any,
-    order_in_date: any,
-    completed_in_progress: any
-  ) {
-    try {
-      // To-Do를 업데이트하고 데이터베이스에 저장합니다.
-      const existingToDo = await TodoRepository.findOne({
-        where: {
-          id: id,
-        },
-      });
+  static async updateToDo(id: number, changedToDo: Partial<TodoList>) {
+    // To-Do를 업데이트하고 데이터베이스에 저장합니다.
+    const existingToDo = await TodoRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
 
-      if (!existingToDo) {
-        return null; // 해당 To-Do를 찾을 수 없을 경우 null 반환
-      }
-
-      existingToDo.task = task;
-      existingToDo.place = place;
-      existingToDo.animation = animation;
-      existingToDo.order_in_date = order_in_date;
-      existingToDo.completed_in_progress = completed_in_progress;
-
-      await TodoRepository.update(
-        { id: id },
-        {
-          task: task,
-          place: place,
-          animation: animation,
-          order_in_date: order_in_date,
-          completed_in_progress: completed_in_progress,
-        }
-      );
-      return existingToDo;
-    } catch (error) {
-      throw new Error("To-Do를 업데이트하는 중에 오류가 발생했습니다.");
+    if (!existingToDo) {
+      return null; // 해당 To-Do를 찾을 수 없을 경우 null 반환
     }
+
+    await TodoRepository.update({ id: id }, changedToDo);
+    return existingToDo;
   }
 
-  static async deleteToDo(id: any) {
+  static async deleteToDo(id: number) {
     try {
       // To-Do를 삭제하고 데이터베이스에서 제거합니다.
       const deletedToDo = await TodoRepository.findOne({
@@ -117,13 +91,10 @@ class ToDoService {
     }
   }
 
-  static async getToDoOrderByDate(userId: number, date: string) {
-    const toDoRepository = getRepository(TodoList);
-
+  static async getToDoOrderByDate(userId: number, date: Date) {
     // userId와 date에 맞는 To-Do 목록을 order_in_date 순으로 정렬하여 가져옵니다.
-    const toDos = await toDoRepository
-      .createQueryBuilder("todo")
-      .where("todo.users.userId = :userId", { userId })
+    const toDos = await TodoRepository.createQueryBuilder("todo")
+      .where("todo.userId = :userId", { userId })
       .andWhere("todo.date = :date", { date })
       .orderBy("todo.order_in_date", "ASC") // order_in_date를 기준으로 오름차순 정렬
       .getMany();
@@ -133,3 +104,9 @@ class ToDoService {
 }
 
 export default ToDoService;
+
+export const convertStringDate = (dateString: string) => {
+  const [year, month, day] = dateString.split("-").map(Number);
+  const convertedDate = new Date(year, month - 1, day);
+  return convertedDate;
+};
