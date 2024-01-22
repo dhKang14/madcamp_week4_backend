@@ -13,27 +13,23 @@ export const updateUser = async (
   updatedData: Partial<UserProfile>
 ) => {
   const user = await UserRepository.findOne({ where: { id: userId } });
-
   if (!user) {
-    return { error: "해당 사용자를 찾을 수 없습니다." };
+    throw new Error("no user");
   }
 
+  const sameEmail = await UserRepository.findOne({
+    where: { email: updatedData.email },
+  });
+  if (sameEmail && sameEmail.id !== userId) {
+    throw new Error("email exists");
+  }
   // 업데이트할 필드를 적용합니다.
-  if (updatedData.password) {
-    user.password = updatedData.password;
-  }
-  if (updatedData.name) {
-    user.name = updatedData.name;
-  }
-  if (updatedData.email) {
-    user.email = updatedData.email;
-  }
-  if (updatedData.carrots) {
-    user.carrots = updatedData.carrots;
-  }
+  const updatedUser: Partial<UserProfile> = {
+    name: updatedData.name,
+    email: updatedData.email,
+  };
 
-  await UserRepository.save(user);
-
+  await UserRepository.update({ id: userId }, updatedUser);
   return user;
 };
 

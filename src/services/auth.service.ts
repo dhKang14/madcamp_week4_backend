@@ -58,14 +58,14 @@ async function signup(password: string, name: string, email: string) {
 }
 
 async function changePassword(
-  email: string,
+  userId: number,
   password: string,
   newpassword: string
 ) {
   // 비밀번호 변경 로직을 구현하세요.
   try {
     const user = await UserRepository.findOne({
-      where: { email: email, password: password },
+      where: { id: userId, password: password },
     });
 
     if (!user) {

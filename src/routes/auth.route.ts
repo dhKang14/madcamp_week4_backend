@@ -14,7 +14,7 @@ router.get("/logout", AuthController.logout);
 router.post("/signup", AuthController.signup);
 
 // 비밀번호 변경
-router.post("/change-password", AuthController.changePassword);
+router.post("/change-password", auth, AuthController.changePassword);
 
 // 토큰 설정
 // router.get("/refresh", auth);

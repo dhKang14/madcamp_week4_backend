@@ -57,9 +57,10 @@ async function signup(req: Request, res: Response) {
 
 async function changePassword(req: Request, res: Response) {
   try {
-    const { email, password, newpassword } = req.body; // 요청 본문에서 이메일, 현재 비밀번호, 새로운 비밀번호를 가져옵니다.
+    const userId = (req as any).user; // middleware에서 유저 ID를 가져오기.
+    const { password, newpassword } = req.body; // 요청 본문에서 이메일, 현재 비밀번호, 새로운 비밀번호를 가져옵니다.
     const success = await AuthService.changePassword(
-      email,
+      userId,
       password,
       newpassword
     ); // AuthService의 changePassword 메서드를 호출하여 비밀번호 변경을 시도합니다.
