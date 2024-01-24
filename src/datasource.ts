@@ -6,7 +6,7 @@ export const myDataSource = new DataSource({
   host: "localhost",
   port: 3306,
   username: "root",
-  password: "password", //dhhgky014?
+  password: "dhhgky014?", //dhhgky014?
   database: "mydatabase",
   synchronize: true,
   logging: false,

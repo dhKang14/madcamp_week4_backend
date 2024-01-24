@@ -43,3 +43,19 @@ export const deleteUser = async (
   const response = await userService.deleteUser(Number(userId));
   res.json(response);
 };
+
+export const carrotRank = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const topCarrotUsers = await userService.carrotRank(20);
+    res.json(topCarrotUsers);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "유저 목록을 가져오는 중에 오류가 발생했습니다." });
+  }
+};
