@@ -69,25 +69,25 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
 });
 
 /////////////////
-const server = http.createServer(app);
-const io = new socketIo.Server(server);
+// const server = http.createServer(app);
+// const io = new socketIo.Server(server);
 
-// Socket.IO 이벤트 처리
-io.on("connection", (socket) => {
-  console.log("사용자가 연결되었습니다.");
+// // Socket.IO 이벤트 처리
+// io.on("connection", (socket) => {
+//   console.log("사용자가 연결되었습니다.");
 
-  // 클라이언트에서 '친구 위치 업데이트' 이벤트를 받음
-  socket.on("친구 위치 업데이트", (data) => {
-    // data에는 친구의 위치 및 정보가 포함됩니다.
-    // 이 위치 및 정보를 다른 클라이언트에게 브로드캐스트하여 실시간 업데이트를 수행합니다.
-    socket.broadcast.emit("친구 위치 업데이트", data);
-  });
+//   // 클라이언트에서 '친구 위치 업데이트' 이벤트를 받음
+//   socket.on("친구 위치 업데이트", (data) => {
+//     // data에는 친구의 위치 및 정보가 포함됩니다.
+//     // 이 위치 및 정보를 다른 클라이언트에게 브로드캐스트하여 실시간 업데이트를 수행합니다.
+//     socket.broadcast.emit("친구 위치 업데이트", data);
+//   });
 
-  // 연결 종료 시
-  socket.on("disconnect", () => {
-    console.log("사용자가 연결 해제되었습니다.");
-  });
-});
+//   // 연결 종료 시
+//   socket.on("disconnect", () => {
+//     console.log("사용자가 연결 해제되었습니다.");
+//   });
+// });
 ///////////////////////
 
 // init data
@@ -100,4 +100,4 @@ myDataSource
 
 module.exports = app;
 
-export { io };
+// export { io };
