@@ -1,17 +1,14 @@
 import { Request, Response } from "express";
 import AuthService, { createJWT } from "../services/auth.service";
+import { cookieSettings, nullCookieSettings } from "../cookieSetting";
 
 async function login(req: Request, res: Response) {
   try {
     const { email, password } = req.body; // 요청 본문에서 이메일과 비밀번호를 가져옵니다.
     const user = await AuthService.login(email, password); // AuthService의 login 메서드를 호출하여 로그인을 시도합니다.
-    res
-      .cookie("accessToken", createJWT(user), {
-        httpOnly: true,
-        secure: true,
-      })
-      .json(user);
+    res.cookie("accessToken", createJWT(user), cookieSettings).json(user);
   } catch (error: any) {
+    console.log(error);
     if (error.message === "no user") {
       res.status(404).json({ error: "사용자 없어요." });
     } else {
@@ -24,13 +21,7 @@ async function logout(req: Request, res: Response) {
   try {
     // 로그아웃 로직을 구현하세요.
     // 필요한 정보를 req.body에서 가져와서 AuthService의 메서드를 호출하세요.
-    res
-      .cookie("accessToken", "", {
-        httpOnly: true,
-        secure: true,
-        expires: new Date(0),
-      })
-      .send();
+    res.cookie("accessToken", null, nullCookieSettings).send();
   } catch (error: any) {
     res.status(500).json({ error: "로그아웃 중에 오류가 발생했습니다." });
   }
@@ -40,12 +31,7 @@ async function signup(req: Request, res: Response) {
   try {
     const { password, name, email } = req.body; // 요청 본문에서 회원 가입 정보를 가져옵니다.
     const newUser = await AuthService.signup(password, name, email); // AuthService의 signup 메서드를 호출하여 회원 가입을 시도합니다.
-    res
-      .cookie("accessToken", createJWT(newUser), {
-        httpOnly: true,
-        secure: true,
-      })
-      .json(newUser);
+    res.cookie("accessToken", createJWT(newUser), cookieSettings).json(newUser);
   } catch (error: any) {
     if (error.message == "existing user") {
       res.status(409).json({ error: "존제하는 사용자입니다." });

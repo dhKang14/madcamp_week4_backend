@@ -3,6 +3,7 @@ import fs from "fs";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import { UserRepository } from "../repositories";
 import { createJWT } from "../services/auth.service";
+import { cookieSettings, nullCookieSettings } from "../cookieSetting";
 
 const path = require("path");
 const publicKeyPath: string = path.join(__dirname, "../certs/public.key");
@@ -25,25 +26,16 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     if (user === null) {
       res
         .status(404)
-        .cookie("accessToken", null, {
-          httpOnly: true,
-          secure: true,
-        })
+        .cookie("accessToken", null, nullCookieSettings)
         .json({ success: false, message: "Unauthorized: no such user." });
     } else {
-      res.cookie("accessToken", createJWT(user), {
-        httpOnly: true,
-        secure: true,
-      });
+      res.cookie("accessToken", createJWT(user), cookieSettings);
       next();
     }
   } catch (error) {
     console.error("Authentication error:", error);
     return res
-      .cookie("accessToken", null, {
-        httpOnly: true,
-        secure: true,
-      })
+      .cookie("accessToken", null, cookieSettings)
       .status(500)
       .send("Internal Server Error");
   }

@@ -23,7 +23,13 @@ var cors = require("cors");
 
 // app.use(cors());
 
-app.use(cors({ origin: "http://localhost:3001", credentials: true }));
+const allowedOrigins = [
+  "http://localhost:3001",
+  "https://deploy-preview-5--sweet-torte-ca49b9.netlify.app",
+  "https://main--sweet-torte-ca49b9.netlify.app",
+  "https://sweet-torte-ca49b9.netlify.app",
+]; // Add your additional origin(s) here
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
