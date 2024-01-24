@@ -4,6 +4,7 @@ import {
   Column,
   OneToMany,
   JoinColumn,
+  ManyToMany,
 } from "typeorm";
 import { TodoList } from "./todoList.entity";
 
@@ -29,4 +30,7 @@ export class UserProfile {
   })
   @JoinColumn({ name: "todolist" })
   todolists: TodoList[];
+
+  @ManyToMany(() => UserProfile, (user) => user.friends)
+  friends: UserProfile[];
 }
