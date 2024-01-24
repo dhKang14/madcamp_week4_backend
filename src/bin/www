@@ -53,6 +53,7 @@ io.on("connection", (socket) => {
     // data에는 친구의 위치 및 정보가 포함됩니다.
     // 이 위치 및 정보를 다른 클라이언트에게 브로드캐스트하여 실시간 업데이트를 수행합니다.
     socket.broadcast.emit("친구 위치 업데이트", data);
+    console.log(data);
   });
 
   // 연결 종료 시
