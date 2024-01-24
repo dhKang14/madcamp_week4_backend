@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import AuthController from "../controllers/auth.controller";
 import { auth } from "../middleware/auth";
 
@@ -17,6 +17,12 @@ router.post("/signup", AuthController.signup);
 router.post("/change-password", auth, AuthController.changePassword);
 
 // 토큰 설정
-// router.get("/refresh", auth);
+router.get("/refresh", auth, async (req: Request, res: Response) => {
+  try {
+    res.json({});
+  } catch (error) {
+    res.status(500).json({ error: "오류가 발생했습니다." });
+  }
+});
 
 module.exports = router;

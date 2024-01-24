@@ -5,8 +5,11 @@ import {
   OneToMany,
   JoinColumn,
   ManyToMany,
+  JoinTable,
 } from "typeorm";
 import { TodoList } from "./todoList.entity";
+import { FriendShip } from "./friends.entity";
+// import { FriendShip } from "./friends.entity";
 
 @Entity("user_profile")
 export class UserProfile {
@@ -31,6 +34,6 @@ export class UserProfile {
   @JoinColumn({ name: "todolist" })
   todolists: TodoList[];
 
-  @ManyToMany(() => UserProfile, (user) => user.friends)
-  friends: UserProfile[];
+  @OneToMany(() => FriendShip, (friendship) => friendship.user1)
+  friendships: FriendShip[];
 }
