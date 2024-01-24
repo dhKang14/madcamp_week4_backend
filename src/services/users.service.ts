@@ -45,10 +45,26 @@ export const deleteUser = async (userId: number) => {
   return { message: "사용자가 삭제되었습니다." };
 };
 
+export const carrotRank = async (limit: number) => {
+  try {
+    // 당근 수에 따라 상위 20명의 사용자를 가져옵니다.
+    const topCarrotUsers = await UserRepository.createQueryBuilder(
+      "user_profile"
+    )
+      .orderBy("user_profile.carrots", "DESC")
+      .limit(limit)
+      .getMany();
+    return topCarrotUsers;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const userService = {
   getUser,
   updateUser,
   deleteUser,
+  carrotRank,
 };
 
 export default userService;

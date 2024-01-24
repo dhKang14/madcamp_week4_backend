@@ -2,6 +2,7 @@ import {
   deleteUser,
   getUser,
   updateUser,
+  carrotRank,
 } from "../controllers/users.controller";
 import { auth } from "../middleware/auth";
 
@@ -15,5 +16,8 @@ router.patch("/", auth, updateUser);
 
 // 회원 정보 삭제
 router.delete("/", auth, deleteUser);
+
+// 당근 랭킹
+router.get("/carrot", auth, carrotRank);
 
 module.exports = router;
