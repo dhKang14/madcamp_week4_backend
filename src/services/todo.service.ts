@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getCustomRepository, getRepository } from "typeorm";
 import { myDataSource } from "../datasource";
 import { TodoList } from "../entities/todoList.entity";
 import { TodoRepository, UserRepository } from "../repositories";
@@ -65,6 +65,22 @@ class ToDoService {
 
     if (!existingToDo) {
       return null; // 해당 To-Do를 찾을 수 없을 경우 null 반환
+    }
+
+    // 클라이언트에서 completed_in_progress가 COMPLETE인 경우에만 당근 수 증가
+    if (changedToDo.completed_in_progress === "COMPLETE") {
+      // 사용자의 당근 수를 증가시킵니다.
+      const id = existingToDo.id; // ToDo의 소유자 사용자 ID를 얻어옵니다.
+      const user = await UserRepository.findOne({
+        where: {
+          id: id,
+        },
+      });
+
+      if (user) {
+        user.carrots++; // 당근 수를 증가시킵니다.
+        await UserRepository.save(user); // 변경된 사용자 정보 저장
+      }
     }
 
     await TodoRepository.update({ id: id }, changedToDo);
