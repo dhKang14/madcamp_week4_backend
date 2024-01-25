@@ -59,26 +59,45 @@ io.on("connection", (socket) => {
     const tokenId = Number(decoded.id);
 
     socket.on("joinMap", ({ map }) => {
-      const roomName = `map_${map}`;
-      socket.roomName = roomName;
-      socket.join(roomName);
-      console.log(`User ${tokenId} joined room ${roomName}`);
+      if (map) {
+        socket.join(map);
+        console.log(`User ${tokenId} joined room ${map}`);
+      } else {
+        socket.join(tokenId);
+        console.log(`User ${tokenId} joined room ${tokenId}`);
+      }
     });
 
-    socket.on("location", (locationData) => {
-      console.log("Received location data: ", locationData);
+    socket.on("userInfo", () =>
+      socket.emit("userInfoReturn", {
+        user: tokenId,
+      })
+    );
 
-      // 클라이언트로부터 받은 위치 정보를 검증하거나 가공하는 과정이 필요하다면 여기서 수행
-      const updatedLocationData = {
-        position: locationData.position,
-        direction: locationData.direction,
-        place: locationData.place,
-        // 필요하다면 추가 데이터를 여기에 포함시킬 수 있습니다.
-      };
+    socket.on("update", () => socket.to(tokenId).emit("updateReturn"));
+
+    socket.on("location", (locationData) => {
+      // console.log(
+      //   "Received location data: ",
+      //   {
+      //     ...locationData,
+      //     user: tokenId,
+      //   },
+      //   "in",
+      //   locationData.map
+      // );
 
       // 저장된 방 이름을 사용하여 해당 방에 위치 정보를 브로드캐스트
-      if (socket.roomName) {
-        socket.to(socket.roomName).emit("friendLocation", updatedLocationData);
+      if (locationData.map) {
+        socket
+          .to(locationData.map)
+          .emit("characterLocation", { ...locationData, user: tokenId });
+      } else {
+        socket.to(tokenId).emit("characterLocation", {
+          ...locationData,
+          map: tokenId,
+          user: tokenId,
+        });
       }
     });
   } catch (error) {
