@@ -6,6 +6,7 @@
     "start": "ts-node ./src/bin/www"
   },
   "dependencies": {
+    "cookie": "^0.6.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "debug": "~2.6.9",

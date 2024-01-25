@@ -89,20 +89,25 @@ class FriendsService {
     return user?.friendships;
   }
 
-  // static async getFriendLocation(friendId: number) {
-  //   try {
-  //     // 친구의 위치 정보를 가져오는 로직을 구현
-  //     const friendLocation = await FriendLocation.findOne({
-  //       where: {
-  //         friend: friendId,
-  //       },
-  //     });
+  static async getFriendMap(friendId: number) {
+    // 친구의 위치 정보를 가져오는 로직을 구현
 
-  //     return friendLocation;
-  //   } catch (error) {
-  //     throw new Error("친구의 위치 정보를 가져오는 중에 오류가 발생했습니다.");
-  //   }
-  // }
+    const friend = await UserRepository.findOne({ where: { id: friendId } });
+    if (friend == null) {
+      throw new Error("no such person!");
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const toDos = await TodoRepository.find({
+      where: {
+        user: friend,
+        date: today,
+      },
+    });
+
+    return { todo: toDos, friend: friend };
+  }
 }
 
 export default FriendsService;
