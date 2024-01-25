@@ -6,7 +6,7 @@
 
 var app = require("../app");
 var debug = require("debug")("madcamp-week4-backend:server");
-var http = require("http");
+const https = require("https");
 var cookie = require("cookie");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
@@ -25,7 +25,13 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(
+  {
+    key: fs.readFileSync(path.join(__dirname, "../certs/key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, "../certs/cert.pem")),
+  },
+  app
+);
 
 /**
  * Listen on provided port, on all network interfaces.
